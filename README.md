@@ -7,7 +7,7 @@
 [![Commitizen friendly][commitizen-badge]][commitizen-url]
 [![NPM version][npm-image]][npm-url]
 
-A library that helps with importing [product-types](http://dev.commercetools.com/http-api-projects-productTypes.html) into the Commercetools Plattform.  
+A library that helps with importing [product-types](http://dev.commercetools.com/http-api-projects-productTypes.html) into the [Commercetools Platform](http://www.commercetools.com/).  
 This library is built to be used in conjunction with [sphere-node-cli](https://github.com/sphereio/sphere-node-cli).
 
 [travis-badge]: https://img.shields.io/travis/sphereio/sphere-product-type-import.svg?style=flat-square
