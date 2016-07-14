@@ -61,14 +61,9 @@ export default class ProductTypeImport {
   }
 
   importProductType (productType) {
-    // validate productType object
     return this.validateProductType(productType)
     .then(() => {
-      // try to import productType
       return this._importValidatedProductType(productType)
-      // check if productType already existed
-      // update productType
-      // successfully imported
     })
     .catch((error) => {
       this.summary.errors.push({ productType, error })
@@ -76,17 +71,34 @@ export default class ProductTypeImport {
   }
 
   _importValidatedProductType (productType) {
-    return new Promise((resolve, reject) => {
-      this.client.productTypes.save(productType)
-      .then(() => {
-        this.summary.inserted.push(productType.name)
-        this.summary.successfullImports = this.summary.successfullImports + 1
-        resolve(productType)
-      })
-      .catch((error) => {
-        // TODO: potentially handle duplicate field error here
-        return reject(error)
-      })
+    return this.client.productTypes.where(`key="${productType.key}"`).fetch()
+    .then(({ body: { total, results: productTypes } }) => {
+      if (total > 0) {
+        const [existingType] = productTypes
+        const { version, id } = existingType
+        // add attributes to existing product type
+        const actions = productType.attributes.map(attr => ({
+          action: 'addAttributeDefinition',
+          attribute: attr
+        }))
+        return this.client.productTypes.byId(id).update({
+          version,
+          actions
+        })
+      } else {
+        return this.client.productTypes.save(productType)
+      }
+    })
+    .then(() => {
+      this.summary.inserted.push(productType.name)
+      this.summary.successfullImports = this.summary.successfullImports + 1
+      return productType
+    })
+    .catch((error) => {
+      console.log(JSON.stringify(error, null, 2))
+      // TODO: potentially handle duplicate field error here
+      // if (error.body && error.body.message && !~error.body.message.indexOf('already exists'))
+      throw error
     })
   }
 
