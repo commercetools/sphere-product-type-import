@@ -7,7 +7,7 @@
     "check-coverage": "istanbul check-coverage --statements 100 --branches 100 --functions 100 --lines 100",
     "report-coverage": "cat ./coverage/lcov.info | codecov",
     "commit": "git-cz",
-    "test": "mocha tests/**/*.js --compilers js:babel-core/register",
+    "test": "./node_modules/.bin/mocha tests/**/*.js --compilers js:babel-core/register",
     "test:ci": "babel-node node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha -- tests/**/*.js",
     "test:watch": "watch 'npm test' src/ tests/",
     "build": "babel src --out-dir dist",
@@ -58,7 +58,7 @@
     "ajv": "4.0.0",
     "ghooks": "1.0.3",
     "lodash": "4.6.1",
-    "sphere-node-sdk": "1.10.1",
+    "sphere-node-sdk": "1.15.1",
     "underscore": "1.8.3",
     "underscore-mixins": "0.1.4"
   },
