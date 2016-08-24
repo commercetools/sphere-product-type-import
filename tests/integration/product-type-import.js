@@ -1,11 +1,10 @@
-import _ from 'lodash'
 import { expect } from 'chai'
 import ProductTypeImport from '../../src'
 import { SphereClient } from 'sphere-node-sdk'
 import { getSphereClientCredentials } from '../../src/utils'
 import Promise from 'bluebird'
 
-const PROJECT_KEY = 'sphere-node-product-type-import'
+const PROJECT_KEY = process.env.SPHERE_TEST_PROJECT_KEY || 'sphere-node-product-type-import'
 const logger = {
   trace: console.log,
   debug: console.log,
@@ -23,7 +22,7 @@ const deleteAll = (service, client) => {
 
 describe('productType import module', function () {
 
-  this.timeout(100000)
+  this.timeout(10000)
 
   let client
   let productTypeImport

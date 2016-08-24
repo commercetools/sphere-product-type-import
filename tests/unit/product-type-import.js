@@ -3,9 +3,8 @@ import ProductTypeImport from '../../src'
 import { SphereClient } from 'sphere-node-sdk'
 import sinon from 'sinon'
 import cuid from 'cuid'
-import _ from 'lodash'
 
-const PROJECT_KEY = 'sphere-node-product-type-import'
+const PROJECT_KEY = process.env.SPHERE_TEST_PROJECT_KEY || 'sphere-node-product-type-import'
 
 describe('product-type import module', () => {
 

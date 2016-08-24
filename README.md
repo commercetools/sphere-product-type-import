@@ -1,3 +1,4 @@
+
 # sphere-product-type-import
 
 [![Travis][travis-badge]][travis-url]
@@ -74,6 +75,24 @@ productTypeImport.importProductType(productType)
   //   successfulImports: 1
   // }
 })
+```
+
+## Testing
+
+For testing you have to set up an access to testing sphere.io project:
+```
+export SPHERE_CLIENT_ID=${CLIENT_ID}
+export SPHERE_CLIENT_SECRET=${CLIENT_SECRET}
+export SPHERE_PROJECT_KEY=${PROJECT_KEY}
+```
+Also set up correct *project key* and credentials to these files:
+- tests/unit/product-type-import.js
+- tests/integration/product-type-import.js
+
+And than run tests using this command:
+```
+npm test // for default project with key "sphere-node-product-type-import"
+SPHERE_TEST_PROJECT_KEY=custom-project-key npm test // for different project 
 ```
 
 [travis-badge]: https://img.shields.io/travis/sphereio/sphere-product-type-import.svg?style=flat-square
