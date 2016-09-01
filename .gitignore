@@ -1,3 +1,5 @@
 node_modules
 dist
 coverage
+.sphere-project-credentials.json
+*.log
