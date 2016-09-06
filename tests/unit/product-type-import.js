@@ -5,6 +5,10 @@ import sinon from 'sinon'
 import cuid from 'cuid'
 import _ from 'lodash'
 
+require('babel-core').transform('code', {
+  plugins: ['transform-runtime']
+})
+
 const PROJECT_KEY = 'sphere-node-product-type-import'
 
 describe('product-type import module', () => {
@@ -117,6 +121,40 @@ describe('product-type import module', () => {
       })
     })
 
+  })
+
+  describe('buildUpdateActions method', () => {
+
+    it('should build actions for new attribute', () => {
+      const importer = new ProductTypeImport(logger, options)
+
+      const newProductType = {
+        attributes: [
+          { name: 'a1' },
+          { name: 'a2' },
+          { name: 'a3' },
+        ],
+      }
+      const existingProductType = {
+        attributes: [
+          { name: 'a2' },
+        ],
+      }
+
+      const actions = importer.buildUpdateActions(
+        newProductType, existingProductType)
+
+      expect(actions).to.deep.equal([
+        {
+          action: 'addAttributeDefinition',
+          attribute: { name: 'a1' },
+        },
+        {
+          action: 'addAttributeDefinition',
+          attribute: { name: 'a3' },
+        },
+      ])
+    })
   })
 
   describe('importProductType method', () => {

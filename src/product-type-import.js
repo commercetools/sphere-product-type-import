@@ -76,11 +76,9 @@ export default class ProductTypeImport {
       if (total > 0) {
         const [existingType] = productTypes
         const { version, id } = existingType
-        // add attributes to existing product type
-        const actions = productType.attributes.map(attr => ({
-          action: 'addAttributeDefinition',
-          attribute: attr
-        }))
+
+        const actions = this.buildUpdateActions(productType, existingType)
+
         return this.client.productTypes.byId(id).update({
           version,
           actions
@@ -95,11 +93,25 @@ export default class ProductTypeImport {
       return productType
     })
     .catch((error) => {
-      console.log(JSON.stringify(error, null, 2))
       // TODO: potentially handle duplicate field error here
       // if (error.body && error.body.message && !~error.body.message.indexOf('already exists'))
       throw error
     })
+  }
+
+  buildUpdateActions (productType, existingProductType) {
+    // Add attributes to existing product types.
+    // Existing attributes are filtered out.
+    return productType.attributes
+    .filter(attr =>
+      !existingProductType.attributes.find(existingAttribute =>
+        existingAttribute.name === attr.name
+      )
+    )
+    .map(attr => ({
+      action: 'addAttributeDefinition',
+      attribute: attr
+    }))
   }
 
   validateProductType (productType) {

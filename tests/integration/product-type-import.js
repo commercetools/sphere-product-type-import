@@ -5,6 +5,10 @@ import { SphereClient } from 'sphere-node-sdk'
 import { getSphereClientCredentials } from '../../src/utils'
 import Promise from 'bluebird'
 
+require('babel-core').transform('code', {
+  plugins: ['transform-runtime']
+})
+
 const PROJECT_KEY = 'sphere-node-product-type-import'
 const logger = {
   trace: console.log,
