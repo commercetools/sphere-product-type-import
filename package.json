@@ -1,7 +1,7 @@
 {
   "name": "sphere-product-type-import",
   "version": "0.0.0-semantically-released",
-  "description": "",
+  "description": "Library that helps with importing product type into the commeretools platform",
   "main": "dist/index.js",
   "scripts": {
     "check-coverage": "istanbul check-coverage --statements 100 --branches 100 --functions 100 --lines 100",
