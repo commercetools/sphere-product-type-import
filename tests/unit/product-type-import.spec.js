@@ -1,24 +1,22 @@
-import { expect } from 'chai'
-import ProductTypeImport from '../../src'
-import { SphereClient } from 'sphere-node-sdk'
-import sinon from 'sinon'
 import cuid from 'cuid'
-import _ from 'lodash'
+import sinon from 'sinon'
+import { expect } from 'chai'
+import { SphereClient } from 'sphere-node-sdk'
+import ProductTypeImport from '../../src'
 
 require('babel-core').transform('code', {
-  plugins: ['transform-runtime']
+  plugins: ['transform-runtime'],
 })
 
 const PROJECT_KEY = 'sphere-node-product-type-import'
 
 describe('product-type import module', () => {
-
   const options = {
     sphereClientConfig: {
       config: {
         project_key: PROJECT_KEY,
         client_id: '*********',
-        client_secret: '*********'
+        client_secret: '*********',
       },
       rest: {
         config: {},
@@ -32,17 +30,18 @@ describe('product-type import module', () => {
         DELETE: () => (/* endpoint, callback */) => {},
         PAGED: () => (/* endpoint, callback */) => {},
         _preRequest: () => {},
-        _doRequest: () => {}
-      }
+        _doRequest: () => {},
+      },
     },
   }
+  /* eslint-disable no-console */
   const logger = {
     trace: console.log,
     debug: console.log,
     info: console.log,
-    error: console.error
+    error: console.error,
   }
-
+  /* eslint-enable no-console */
   it('should be class', () => {
     const expected = 'function'
     const actual = typeof ProductTypeImport
@@ -104,7 +103,6 @@ describe('product-type import module', () => {
   })
 
   describe('validation method', () => {
-
     it('should resolve if the product-type object is valid', (done) => {
       const importer = new ProductTypeImport(logger, options)
       importer.validateProductType({ name: 'product-type', description: 'des' })
@@ -120,11 +118,9 @@ describe('product-type import module', () => {
         done()
       })
     })
-
   })
 
   describe('buildUpdateActions method', () => {
-
     it('should build actions for new attribute', () => {
       const importer = new ProductTypeImport(logger, options)
 
@@ -158,7 +154,6 @@ describe('product-type import module', () => {
   })
 
   describe('importProductType method', () => {
-
     let importer
 
     beforeEach(() => {
@@ -168,7 +163,7 @@ describe('product-type import module', () => {
     afterEach(() => {
     })
 
-    it('should increase the successfullImports counter', function (done) {
+    it('should increase the successfullImports counter', (done) => {
       importer.importProductType(
         { name: 'product-type', description: 'some product type' }
       ).then(() => {
@@ -195,23 +190,21 @@ describe('product-type import module', () => {
       const error = {
         body: {
           errors: [{
-            code: 'DuplicateField'
-          }]
-        }
+            code: 'DuplicateField',
+          }],
+        },
       }
-      const mockCustomerSave = () => {
-        return Promise.reject(error)
-      }
+      const mockCustomerSave = () => Promise.reject(error)
       sinon.stub(importer.client.productTypes, 'save', mockCustomerSave)
       const productType = {
-        name: 'product-type', description: 'some product type'
+        name: 'product-type', description: 'some product type',
       }
       importer.importProductType(productType)
       .then(() => {
         const actual = importer.summary.errors[0]
         const expected = {
           productType,
-          error: error
+          error,
         }
         expect(actual).to.deep.equal(expected)
         importer.client.productTypes.save.restore()
@@ -220,26 +213,22 @@ describe('product-type import module', () => {
     })
 
     it('should handle errors during creating a product-type', (done) => {
-      const mockCustomerSave = () => {
-        return Promise.reject({})
-      }
+      const mockCustomerSave = () => Promise.reject({})
       sinon.stub(importer.client.productTypes, 'save', mockCustomerSave)
       const productType = {
-        name: 'product-type', description: 'some product type'
+        name: 'product-type', description: 'some product type',
       }
       importer.importProductType(productType)
       .then(() => {
         const actual = importer.summary.errors[0]
         const expected = {
           productType,
-          error: {}
+          error: {},
         }
         expect(actual).to.deep.equal(expected)
         importer.client.productTypes.save.restore()
         done()
       })
     })
-
   })
-
 })

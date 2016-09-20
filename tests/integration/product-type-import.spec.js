@@ -1,42 +1,44 @@
-import _ from 'lodash'
 import { expect } from 'chai'
-import ProductTypeImport from '../../src'
 import { SphereClient } from 'sphere-node-sdk'
-import { getSphereClientCredentials } from '../../src/utils'
 import Promise from 'bluebird'
+import ProductTypeImport from '../../src'
+import getSphereClientCredentials from '../../src/utils'
 
 require('babel-core').transform('code', {
-  plugins: ['transform-runtime']
+  plugins: ['transform-runtime'],
 })
 
 const PROJECT_KEY = 'sphere-node-product-type-import'
+/* eslint-disable no-console */
 const logger = {
   trace: console.log,
   debug: console.log,
   info: console.log,
-  error: console.error
+  error: console.error,
 }
-const deleteAll = (service, client) => {
-  return client[service].process(({ body: { results } }) => {
-    return Promise.map(results, (productType) => {
-      return client[service].byId(productType.id)
-      .delete(productType.version)
-    })
-  })
-}
+/* eslint-enable no-console */
+const deleteAll = (service, client) => client[service].process(
+  ({ body: { results } }) => Promise.map(
+    results, productType => client[service].byId(
+      productType.id
+    ).delete(
+      productType.version
+    )
+  )
+)
 
-describe('productType import module', function () {
-
+describe('productType import module', function productTypeTestFn () {
   this.timeout(100000)
 
   let client
   let productTypeImport
 
   beforeEach((done) => {
+    console.log(getSphereClientCredentials)
     getSphereClientCredentials(PROJECT_KEY)
-    .then(sphereCredentials => {
+    .then((sphereCredentials) => {
       const options = {
-        config: sphereCredentials
+        config: sphereCredentials,
       }
       client = new SphereClient(options)
 
@@ -54,36 +56,36 @@ describe('productType import module', function () {
 
   it('should import a complete product type', (done) => {
     const productType = {
-      "key": "random-key",
-      "name": "custom-product-type",
-      "description": "Some cool description",
-      "attributes": [
+      key: 'random-key',
+      name: 'custom-product-type',
+      description: 'Some cool description',
+      attributes: [
         {
-          "name": "breite",
-          "label": {
-            "de": "Breite"
+          name: 'breite',
+          label: {
+            de: 'Breite',
           },
-          "type": {
-            "name": "number"
+          type: {
+            name: 'number',
           },
-          "attributeConstraint": "None",
-          "isRequired": false,
-          "isSearchable": false
+          attributeConstraint: 'None',
+          isRequired: false,
+          isSearchable: false,
         },
         {
-          "name": "farbe",
-          "label": {
-            "de": "Farbe"
+          name: 'farbe',
+          label: {
+            de: 'Farbe',
           },
-          "type": {
-            "name": "ltext"
+          type: {
+            name: 'ltext',
           },
-          "attributeConstraint": "None",
-          "isRequired": false,
-          "isSearchable": false,
-          "inputHint": "SingleLine"
-        }
-      ]
+          attributeConstraint: 'None',
+          isRequired: false,
+          isSearchable: false,
+          inputHint: 'SingleLine',
+        },
+      ],
     }
     productTypeImport.importProductType(productType)
     .then(() => {
@@ -95,53 +97,52 @@ describe('productType import module', function () {
 
       return client.productTypes.where(`name="${productType.name}"`).fetch()
       .then(({ body: { results: productTypes } }) => {
-        const actual = productTypes.length
-        const expected = 1
+        const _actual = productTypes.length
+        const _expected = 1
 
-        expect(actual).to.equal(expected)
+        expect(_actual).to.equal(_expected)
         done()
       })
     })
     .catch((err) => {
-      console.log(JSON.stringify(err, null, 2))
       done(err)
     })
   })
 
   it('should add an attribute to an existing product type', (done) => {
     const productType = {
-      "key": "random-key",
-      "name": "custom-product-type",
-      "description": "Some cool description",
-      "attributes": [
+      key: 'random-key',
+      name: 'custom-product-type',
+      description: 'Some cool description',
+      attributes: [
         {
-          "name": "breite",
-          "label": {
-            "de": "Breite"
+          name: 'breite',
+          label: {
+            de: 'Breite',
           },
-          "type": {
-            "name": "number"
+          type: {
+            name: 'number',
           },
-          "attributeConstraint": "None",
-          "isRequired": false,
-          "isSearchable": false
-        }
-      ]
+          attributeConstraint: 'None',
+          isRequired: false,
+          isSearchable: false,
+        },
+      ],
     }
     const updatedProductType = Object.assign({}, productType, {
       attributes: [{
-        "name": "farbe",
-        "label": {
-          "de": "Farbe"
+        name: 'farbe',
+        label: {
+          de: 'Farbe',
         },
-        "type": {
-          "name": "ltext"
+        type: {
+          name: 'ltext',
         },
-        "attributeConstraint": "None",
-        "isRequired": false,
-        "isSearchable": false,
-        "inputHint": "SingleLine"
-      }]
+        attributeConstraint: 'None',
+        isRequired: false,
+        isSearchable: false,
+        inputHint: 'SingleLine',
+      }],
     })
     productTypeImport.importProductType(productType)
     .then(() => {
@@ -159,9 +160,7 @@ describe('productType import module', function () {
 
       expect(actual).to.equal(expected)
     })
-    .then(() => {
-      return productTypeImport.importProductType(updatedProductType)
-    })
+    .then(() => productTypeImport.importProductType(updatedProductType))
     .then(() => {
       const summary = JSON.parse(productTypeImport.summaryReport())
       const actual = summary.errors.length
@@ -172,12 +171,10 @@ describe('productType import module', function () {
     })
     .then(({ body: { results: productTypes } }) => {
       const [importedProductType] = productTypes
-      expect(importedProductType.attributes.map(a => a.name)).to.deep.equal(['breite', 'farbe'])
+      expect(importedProductType.attributes.map(a => a.name))
+        .to.deep.equal(['breite', 'farbe'])
       done()
     })
-    .catch((err) => {
-      console.log(JSON.stringify(err, null, 2))
-      done(err)
-    })
+    .catch(err => done(err))
   })
 })

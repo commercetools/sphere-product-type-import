@@ -39,7 +39,7 @@ export default class ProductTypeImport {
     this.summary = {
       errors: [],
       inserted: [],
-      successfullImports: 0
+      successfullImports: 0,
     }
   }
 
@@ -49,10 +49,9 @@ export default class ProductTypeImport {
 
   processStream (productTypes, next) {
     // process batch
-    return Promise.map(productTypes, (productType) => {
-      return this.importProductType(productType)
-    })
-    .then(() => {
+    return Promise.map(
+      productTypes, productType => this.importProductType(productType)
+    ).then(() => {
       // call next for next batch
       next()
     })
@@ -62,9 +61,7 @@ export default class ProductTypeImport {
 
   importProductType (productType) {
     return this.validateProductType(productType)
-    .then(() => {
-      return this._importValidatedProductType(productType)
-    })
+    .then(() => this._importValidatedProductType(productType))
     .catch((error) => {
       this.summary.errors.push({ productType, error })
     })
@@ -81,11 +78,11 @@ export default class ProductTypeImport {
 
         return this.client.productTypes.byId(id).update({
           version,
-          actions
+          actions,
         })
-      } else {
-        return this.client.productTypes.save(productType)
       }
+
+      return this.client.productTypes.save(productType)
     })
     .then(() => {
       this.summary.inserted.push(productType.name)
@@ -93,12 +90,14 @@ export default class ProductTypeImport {
       return productType
     })
     .catch((error) => {
-      // TODO: potentially handle duplicate field error here
-      // if (error.body && error.body.message && !~error.body.message.indexOf('already exists'))
+      // TO DO: potentially handle duplicate field error here
+      // if (error.body && error.body.message && !~error.
+      //    body.message.indexOf('already exists'))
       throw error
     })
   }
 
+  // eslint-disable-next-line class-methods-use-this
   buildUpdateActions (productType, existingProductType) {
     // Add attributes to existing product types.
     // Existing attributes are filtered out.
@@ -110,16 +109,15 @@ export default class ProductTypeImport {
     )
     .map(attr => ({
       action: 'addAttributeDefinition',
-      attribute: attr
+      attribute: attr,
     }))
   }
-
+  // eslint-disable-next-line class-methods-use-this
   validateProductType (productType) {
     const isValid = validate(productType)
-    if (isValid) {
+    if (isValid)
       return Promise.resolve()
-    } else {
-      return Promise.reject(validate.errors)
-    }
+
+    return Promise.reject(validate.errors)
   }
 }
