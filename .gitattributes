@@ -1,1 +1,1 @@
-sphere-project-credentials filter=git-crypt diff=git-crypt
+.sphere-project-credentials filter=git-crypt diff=git-crypt
