@@ -8,15 +8,19 @@
     "report-coverage": "cat ./coverage/lcov.info | codecov",
     "commit": "git-cz",
     "test": "mocha tests/**/*.js --compilers js:babel-register",
-    "test:ci": "babel-node node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha -- tests/**/*.js",
+    "test:ci": " npm run clean && babel-node node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha -- tests/**/*.js",
+    "clean": "rimraf dist/* coverage",
     "test:watch": "watch 'npm test' src/ tests/",
-    "build": "babel src --out-dir dist",
+    "build": "npm run clean && babel src --out-dir dist",
     "lint": "./scripts/lint src test",
     "semantic-release": "semantic-release pre && npm run build && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/sphereio/sphere-product-type-import.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sphereio/sphere-product-type-import/issues"
   },
   "keywords": [
     "ctp",
@@ -25,13 +29,14 @@
     "import"
   ],
   "author": "Philipp Sporrer <philipp.sporrer@commercetools.de>",
+  "homepage": "https://github.com/sphereio/sphere-product-type-import#readme",
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "6.6.0",
     "babel-core": "6.6.5",
     "babel-istanbul": "0.6.1",
-    "babel-preset-es2015": "latest",
     "babel-plugin-transform-runtime": "6.12.0",
+    "babel-preset-es2015": "latest",
     "babel-register": "^6.14.0",
     "babel-runtime": "6.9.2",
     "chai": "3.5.0",
@@ -44,6 +49,7 @@
     "isparta": "4.0.0",
     "istanbul": "0.4.2",
     "mocha": "2.4.5",
+    "rimraf": "^2.5.4",
     "semantic-release": "^4.3.5",
     "sinon": "1.17.3",
     "sphere-node-utils": "0.8.0",
