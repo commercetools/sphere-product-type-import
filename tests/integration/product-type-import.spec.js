@@ -34,7 +34,6 @@ describe('productType import module', function productTypeTestFn () {
   let productTypeImport
 
   beforeEach((done) => {
-    console.log(getSphereClientCredentials)
     getSphereClientCredentials(PROJECT_KEY)
     .then((sphereCredentials) => {
       const options = {
