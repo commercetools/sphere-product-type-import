@@ -14,7 +14,7 @@ This library is built to be used in conjunction with [sphere-node-cli](https://g
 - Import product types to your CTP project
 - Pre-validate product types using a [JSON schema](https://github.com/sphereio/sphere-product-type-import/blob/master/src/product-type-import.js#L7)
 
-### Configuration
+## Configuration
 The configuration object may contain:
 - `sphereClientConfig`: see the [sphere-node-sdk docs](http://sphereio.github.io/sphere-node-sdk/) for more information on this
 
@@ -75,6 +75,8 @@ productTypeImport.importProductType(productType)
   // }
 })
 ```
+## Contributing
+  See [CONTRIBUTING.md](CONTRIBUTING.md) file for info on how to contribute to this library
 
 [travis-badge]: https://img.shields.io/travis/sphereio/sphere-product-type-import.svg?style=flat-square
 [travis-url]: https://travis-ci.org/sphereio/sphere-product-type-import
