@@ -1,6 +1,26 @@
 # Contributing
 First of all, thank you for contributing. It’s appreciated. This guide details how to use issues and pull requests to improve this project.
 
+Requirements:
+* NodeJS(v4 LTS)
+* git crypt
+
+## Installation
+Clone this repository
+
+```bash
+$ git clone https://github.com/sphereio/sphere-product-type-import.git
+```
+
+We are using git-crypt for encrypting configs.
+Run
+
+```bash
+$ git-crypt unlock
+```
+
+to unlock the config file.
+
 ## Running
 Watch for file changes then lint and test:
 `npm start`
