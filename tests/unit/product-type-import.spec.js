@@ -160,8 +160,6 @@ test('buildUpdateActions method should' +
   t.end()
 })
 
-// describe('importProductType method', () => {
-
 const initProductTypeImport = function initProductTypeImport () {
   return new ProductTypeImport(logger, options)
 }
