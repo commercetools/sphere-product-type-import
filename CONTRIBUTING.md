@@ -1,7 +1,19 @@
 # Contributing
 First of all, thank you for contributing. It’s appreciated. This guide details how to use issues and pull requests to improve this project.
 
-Requirements:
+Table of Contents
+=================
+
+  * [Requirements:](#requirements)
+  * [Installation](#installation)
+  * [Running](#running)
+  * [Making changes](#making-changes)
+    * [Branching](#branching)
+    * [Commit message](#commit-message)
+  * [Creating an Issue](#creating-an-issue)
+  * [Tests](#tests)
+
+## Requirements:
 * NodeJS(v4 LTS)
 * git crypt
 
