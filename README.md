@@ -10,6 +10,15 @@
 A library that helps with importing [product-types](http://dev.commercetools.com/http-api-projects-productTypes.html) into the [Commercetools Platform](http://www.commercetools.com/).  
 This library is built to be used in conjunction with [sphere-node-cli](https://github.com/sphereio/sphere-node-cli).
 
+Table of Contents
+=================
+
+  * [Features](#features)
+  * [Configuration](#configuration)
+  * [Usage with sphere-node-cli](#usage-with-sphere-node-cli)
+  * [Direct usage](#direct-usage)
+  * [Contributing](#contributing)
+
 ## Features
 - Import product types to your CTP project
 - Pre-validate product types using a [JSON schema](https://github.com/sphereio/sphere-product-type-import/blob/master/src/product-type-import.js#L7)
