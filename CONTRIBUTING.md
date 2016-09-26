@@ -4,7 +4,7 @@ First of all, thank you for contributing. It’s appreciated. This guide details
 Table of Contents
 =================
 
-  * [Requirements:](#requirements)
+  * [Requirements](#requirements)
   * [Installation](#installation)
   * [Running](#running)
   * [Making changes](#making-changes)
