@@ -51,9 +51,9 @@ test('productType import module should import a complete product type', (t) => {
       description: 'Some cool description',
       attributes: [
         {
-          name: 'breite',
+          name: 'width',
           label: {
-            de: 'Breite',
+            de: 'Width',
           },
           type: {
             name: 'number',
@@ -63,9 +63,9 @@ test('productType import module should import a complete product type', (t) => {
           isSearchable: false,
         },
         {
-          name: 'farbe',
+          name: 'color',
           label: {
-            de: 'Farbe',
+            de: 'Color',
           },
           type: {
             name: 'ltext',
@@ -109,9 +109,9 @@ test('productType import module should add an attribute' +
       description: 'Some cool description',
       attributes: [
         {
-          name: 'breite',
+          name: 'width',
           label: {
-            de: 'Breite',
+            de: 'Width',
           },
           type: {
             name: 'number',
@@ -124,9 +124,9 @@ test('productType import module should add an attribute' +
     }
     const updatedProductType = Object.assign({}, productType, {
       attributes: [{
-        name: 'farbe',
+        name: 'color',
         label: {
-          de: 'Farbe',
+          de: 'Color',
         },
         type: {
           name: 'ltext',
@@ -165,7 +165,7 @@ test('productType import module should add an attribute' +
     .then(({ body: { results: productTypes } }) => {
       const [importedProductType] = productTypes
       const actual = importedProductType.attributes.map(a => a.name)
-      const expected = ['breite', 'farbe']
+      const expected = ['width', 'color']
       t.deepEqual(actual, expected)
       t.end()
     })
