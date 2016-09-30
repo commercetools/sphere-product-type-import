@@ -28,6 +28,9 @@
     "product-type",
     "import"
   ],
+  "files": [
+    "dist/"
+  ],
   "author": "Philipp Sporrer <philipp.sporrer@commercetools.de>",
   "homepage": "https://github.com/sphereio/sphere-product-type-import#readme",
   "license": "MIT",
