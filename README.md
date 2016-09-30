@@ -13,11 +13,10 @@ This library is built to be used in conjunction with [sphere-node-cli](https://g
 
 Table of Contents
 =================
-
   * [Features](#features)
   * [Configuration](#configuration)
-  * [Usage with sphere-node-cli](#usage-with-sphere-node-cli)
-    * [Usage with sphere-node-cli](#usage-with-sphere-node-cli-1)
+  * [Usage](#usage)
+    * [Usage with sphere-node-cli](#usage-with-sphere-node-cli)
     * [Direct usage](#direct-usage)
   * [Contributing](#contributing)
 
@@ -29,7 +28,7 @@ Table of Contents
 The configuration object may contain:
 - `sphereClientConfig`: see the [sphere-node-sdk docs](http://sphereio.github.io/sphere-node-sdk/) for more information on this
 
-## Usage with `sphere-node-cli`
+## Usage
 
 ### Usage with `sphere-node-cli`
 
