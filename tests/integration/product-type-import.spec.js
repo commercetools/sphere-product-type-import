@@ -4,7 +4,12 @@ import test from 'tape'
 import ProductTypeImport from '../../src'
 import getSphereClientCredentials from '../../src/utils'
 
-const PROJECT_KEY = process.env.npm_config_projectKey
+let PROJECT_KEY
+
+if (process.env.CI === 'true')
+  PROJECT_KEY = process.env.SPHERE_PROJECT_KEY
+else
+  PROJECT_KEY = process.env.npm_config_projectKey
 
 /* eslint-disable no-console */
 const logger = {
