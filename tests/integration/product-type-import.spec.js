@@ -49,7 +49,7 @@ const before = function setupSphereCreds () {
 }
 
 test('productType import module should import a complete product type', (t) => {
-  t.timeoutAfter(100000)
+  t.timeoutAfter(10000)
   before().then(() => {
     const productType = {
       key: 'random-key',
@@ -107,7 +107,7 @@ test('productType import module should import a complete product type', (t) => {
 
 test('productType import module should add an attribute' +
       'to an existing product type', (t) => {
-  t.timeoutAfter(100000)
+  t.timeoutAfter(10000)
   before().then(() => {
     const productType = {
       key: 'random-key',
