@@ -48,7 +48,8 @@ const before = function setupSphereCreds () {
     })
 }
 
-test('productType import module should import a complete product type', (t) => {
+test(`productType import module
+  should import a complete product type`, (t) => {
   t.timeoutAfter(10000)
   before().then(() => {
     const productType = {
@@ -89,13 +90,13 @@ test('productType import module should import a complete product type', (t) => {
       const actual = summary.errors.length
       const expected = 0
 
-      t.equal(actual, expected)
+      t.equal(actual, expected, 'There should be no error')
       return client.productTypes.where(`name="${productType.name}"`).fetch()
       .then(({ body: { results: productTypes } }) => {
         const _actual = productTypes.length
         const _expected = 1
 
-        t.equal(_actual, _expected)
+        t.equal(_actual, _expected, 'ProductTypes count should be same')
 
         t.end()
       })
@@ -105,8 +106,8 @@ test('productType import module should import a complete product type', (t) => {
   .catch(t.end)
 })
 
-test('productType import module should add an attribute' +
-      'to an existing product type', (t) => {
+test(`productType import module
+  should add an attribute to an existing product type`, (t) => {
   t.timeoutAfter(10000)
   before().then(() => {
     const productType = {
@@ -149,7 +150,7 @@ test('productType import module should add an attribute' +
       const actual = summary.errors.length
       const expected = 0
 
-      t.equal(actual, expected)
+      t.equal(actual, expected, 'There should be no error')
 
       return client.productTypes.where(`name="${productType.name}"`).fetch()
     })
@@ -157,14 +158,14 @@ test('productType import module should add an attribute' +
       const actual = productTypes.length
       const expected = 1
 
-      t.equal(actual, expected)
+      t.equal(actual, expected, 'ProductTypes count should be equal')
     })
     .then(() => productTypeImport.importProductType(updatedProductType))
     .then(() => {
       const summary = JSON.parse(productTypeImport.summaryReport())
       const actual = summary.errors.length
       const expected = 0
-      t.equal(actual, expected)
+      t.equal(actual, expected, 'There should be no error')
 
       return client.productTypes.where(`name="${productType.name}"`).fetch()
     })
@@ -172,7 +173,7 @@ test('productType import module should add an attribute' +
       const [importedProductType] = productTypes
       const actual = importedProductType.attributes.map(a => a.name)
       const expected = ['width', 'color']
-      t.deepEqual(actual, expected)
+      t.deepEqual(actual, expected, 'Product attributes should be equal')
       t.end()
     })
   })

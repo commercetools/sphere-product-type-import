@@ -39,31 +39,34 @@ const logger = {
   error: console.error,
 }
 /* eslint-enable no-console */
-test('should be class', (t) => {
+test(`ProductTypeImport
+  should be class`, (t) => {
   const expected = 'function'
   const actual = typeof ProductTypeImport
-  t.equal(actual, expected)
+  t.equal(actual, expected, 'ProductTypeImport is a class')
 
   t.end()
 })
 
-test('should create a sphere client', (t) => {
+test(`ProductTypeImport
+  should create a sphere client`, (t) => {
   const importer = new ProductTypeImport(logger, options)
   const expected = SphereClient
   const actual = importer.client.constructor
 
-  t.equal(actual, expected)
+  t.equal(actual, expected, 'ProductTypeImport is an instanceof SphereClient')
 
   t.end()
 })
 
-test('summaryReport should return no errors and no imported product-types' +
-  'if no product-types were imported', (t) => {
+test(`summaryReport
+  should return no errors and no imported product-types
+  if no product-types were imported`, (t) => {
   const importer = new ProductTypeImport(logger, options)
   const expected = { errors: [], inserted: [], successfullImports: 0 }
   const actual = JSON.parse(importer.summaryReport())
 
-  t.deepEqual(actual, expected)
+  t.deepEqual(actual, expected, 'No errors if no import occurs')
 
   t.end()
 })
@@ -77,36 +80,38 @@ test(`getSphereClientCredentials
     })
     .catch((err) => {
       const expectedMsg = 'Project Key is needed'
-      t.ok(err)
+      t.ok(err, 'Error should exist')
       t.equal(err.message, expectedMsg, 'Error message should be present')
       t.end()
     })
 })
 
-test('processStream function should exist', (t) => {
+test(`processStream function
+  should exist`, (t) => {
   const importer = new ProductTypeImport(logger, options)
   const expected = 'function'
   const actual = typeof importer.processStream
 
-  t.equal(actual, expected)
+  t.equal(actual, expected, 'method is a valid function')
 
   t.end()
 })
 
-test('processStream function should call it\'s callback', (t) => {
+test(`processStream function
+  should call it\'s callback`, (t) => {
   const callback = sinon.spy()
   const importer = new ProductTypeImport(logger, options)
 
   importer.processStream([], callback)
   .then(() => {
-    t.ok(callback.calledOnce)
+    t.ok(callback.calledOnce, 'ProductTypeImport is called once')
 
     t.end()
   })
 })
 
-test('processStream function should call importProductType' +
-    'for each product-type in the given chunk', (t) => {
+test(`processStream function should
+  call importProductType for each product-type in the given chunk`, (t) => {
   const mockImportProductType = sinon.spy(() => {})
   const callback = () => {}
   const productTypes = Array.from(new Array(10), () => ({ name: cuid() }))
@@ -118,14 +123,14 @@ test('processStream function should call importProductType' +
     const actual = mockImportProductType.callCount
     const expected = productTypes.length
 
-    t.equal(actual, expected)
+    t.equal(actual, expected, 'Product types count is equal')
 
     t.end()
   })
 })
 
-test('validation method should resolve' +
-    'if the product-type object is valid', (t) => {
+test(`validation method
+  should resolve if the product-type object is valid`, (t) => {
   const importer = new ProductTypeImport(logger, options)
   importer.validateProductType({ name: 'product-type', description: 'des' })
   .then(() => {
@@ -133,8 +138,8 @@ test('validation method should resolve' +
   })
 })
 
-test('validation method should reject' +
-    'if the product-type object is invalid', (t) => {
+test(`validation method
+  should reject if the product-type object is invalid`, (t) => {
   const importer = new ProductTypeImport(logger, options)
   importer.validateProductType({})
   .catch(() => {
@@ -142,8 +147,8 @@ test('validation method should reject' +
   })
 })
 
-test('buildUpdateActions method should' +
-      'build actions for new attribute', (t) => {
+test(`buildUpdateActions method
+  should build actions for new attribute`, (t) => {
   const importer = new ProductTypeImport(logger, options)
 
   const newProductType = {
@@ -171,7 +176,7 @@ test('buildUpdateActions method should' +
       attribute: { name: 'a3' },
     },
   ]
-  t.deepEqual(actual, expected)
+  t.deepEqual(actual, expected, 'Update actions should be deepEqual')
 
   t.end()
 })
@@ -181,34 +186,36 @@ const initProductTypeImport = function initProductTypeImport () {
 }
 
 
-test('importProductType method should increase' +
-  'the successfullImports counter', (t) => {
+test(`importProductType method
+  should increase the successfullImports counter`, (t) => {
   const importer = initProductTypeImport()
   importer.importProductType(
     { name: 'product-type', description: 'some product type' }
   ).then(() => {
     const actual = importer.summary.successfullImports
     const expected = 1
-    t.equal(actual, expected)
+    t.equal(actual, expected, 'One product should be imported successfully')
 
     t.end()
   }).catch(t.end)
 })
 
-test('importProductType method should push the error and the' +
-  'corresponding product-type to the errors array', (t) => {
+test(`importProductType method
+  should push the error and the
+  corresponding product-type to the errors array`, (t) => {
   const importer = initProductTypeImport()
   importer.importProductType({})
   .then(() => {
     const actual = importer.summary.errors.length
     const expected = 1
-    t.equal(actual, expected)
+    t.equal(actual, expected, 'Error should occur')
 
     t.end()
   }).catch(t.end)
 })
 
-test('importProductType method should handle existing product-types', (t) => {
+test(`importProductType method
+  should handle existing product-types`, (t) => {
   const importer = initProductTypeImport()
   const error = {
     body: {
@@ -229,14 +236,14 @@ test('importProductType method should handle existing product-types', (t) => {
       productType,
       error,
     }
-    t.deepEqual(actual, expected)
+    t.deepEqual(actual, expected, 'existing product types should be handled')
     importer.client.productTypes.save.restore()
     t.end()
   }).catch(t.end)
 })
 
-test('importProductType method should handle errors' +
-      'during creating a product-type', (t) => {
+test(`importProductType method
+  should handle errors during creating a product-type`, (t) => {
   const importer = initProductTypeImport()
   const mockCustomerSave = () => Promise.reject({})
   sinon.stub(importer.client.productTypes, 'save', mockCustomerSave)
@@ -250,7 +257,7 @@ test('importProductType method should handle errors' +
       productType,
       error: {},
     }
-    t.deepEqual(actual, expected)
+    t.deepEqual(actual, expected, 'there is no error')
     importer.client.productTypes.save.restore()
     t.end()
   }).catch(t.end)
