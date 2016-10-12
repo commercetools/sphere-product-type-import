@@ -3,6 +3,7 @@ import test from 'tape'
 import sinon from 'sinon'
 import { SphereClient } from 'sphere-node-sdk'
 import ProductTypeImport from '../../src'
+import getSphereClientCredentials from '../../src/utils'
 
 const PROJECT_KEY = 'sphere-node-product-type-import'
 
@@ -65,6 +66,21 @@ test('summaryReport should return no errors and no imported product-types' +
   t.deepEqual(actual, expected)
 
   t.end()
+})
+
+test(`getSphereClientCredentials
+  should throw an error is projectKey is not defined`, (t) => {
+  getSphereClientCredentials(undefined)
+    .then(() => {
+      t.fail('should not resolve')
+      t.end()
+    })
+    .catch((err) => {
+      const expectedMsg = 'Project Key is needed'
+      t.ok(err)
+      t.equal(err.message, expectedMsg, 'Error message should be present')
+      t.end()
+    })
 })
 
 test('processStream function should exist', (t) => {
