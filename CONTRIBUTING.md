@@ -70,4 +70,10 @@ Before you create a new issue:
 ## Tests
 We use [tape](https://github.com/substack/tape) for unit and integration test. You can use [Cucumber](https://github.com/cucumber/cucumber-js) for acceptance tests.
 
+To run tests you need to pass the sphere project key in the command line
+
+```bash
+npm test --projectKey=[<your personal development project key>]
+```
+
 We try to maintain a code coverage of 100%. Please ensure you do so too 😉
