@@ -4,7 +4,8 @@ import test from 'tape'
 import ProductTypeImport from '../../src'
 import getSphereClientCredentials from '../../src/utils'
 
-const PROJECT_KEY = 'sphere-node-product-type-import'
+const PROJECT_KEY = process.env.npm_config_projectKey
+
 /* eslint-disable no-console */
 const logger = {
   trace: console.log,
@@ -28,18 +29,18 @@ let productTypeImport
 
 const before = function setupSphereCreds () {
   return getSphereClientCredentials(PROJECT_KEY)
-  .then((sphereCredentials) => {
-    const options = {
-      config: sphereCredentials,
-    }
-    client = new SphereClient(options)
+    .then((sphereCredentials) => {
+      const options = {
+        config: sphereCredentials,
+      }
+      client = new SphereClient(options)
 
-    productTypeImport = new ProductTypeImport(
-      logger,
-      { sphereClientConfig: options }
-    )
-    return deleteAll('productTypes', client)
-  })
+      productTypeImport = new ProductTypeImport(
+        logger,
+        { sphereClientConfig: options }
+      )
+      return deleteAll('productTypes', client)
+    })
 }
 
 test('productType import module should import a complete product type', (t) => {
@@ -169,6 +170,6 @@ test('productType import module should add an attribute' +
       t.deepEqual(actual, expected)
       t.end()
     })
-    .catch(t.end)
   })
+  .catch(t.end)
 })
