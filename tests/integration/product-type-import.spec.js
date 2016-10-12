@@ -1,8 +1,8 @@
 import { SphereClient } from 'sphere-node-sdk'
 import Promise from 'bluebird'
 import test from 'tape'
-import ProductTypeImport from '../../src'
-import getSphereClientCredentials from '../../src/utils'
+import ProductTypeImport from 'index'
+import getSphereClientCredentials from 'utils'
 
 let PROJECT_KEY
 

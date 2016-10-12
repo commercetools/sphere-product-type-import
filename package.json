@@ -7,7 +7,7 @@
     "check-coverage": "nyc check-coverage --lines 100 --functions 100 --branches 100 --statements 100",
     "report-coverage": "cat ./coverage/lcov.info | codecov",
     "commit": "git-cz",
-    "test": "cross-env NODE_ENV=test babel-node node_modules/.bin/tape tests/**/*.spec.js | tap-spec",
+    "test": "cross-env NODE_ENV=test NODE_PATH=./src babel-node node_modules/.bin/tape tests/**/*.spec.js | tap-spec",
     "clean": "rimraf dist/* coverage",
     "test:watch": "chokidar src test -c 'npm test'",
     "build": "npm run clean && babel src --out-dir dist",
@@ -82,7 +82,16 @@
     "underscore-mixins": "^0.1.4"
   },
   "eslintConfig": {
-    "extends": "commercetools"
+    "extends": "commercetools",
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "paths": [
+            "src/"
+          ]
+        }
+      }
+    }
   },
   "config": {
     "commitizen": {

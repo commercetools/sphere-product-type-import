@@ -2,8 +2,8 @@ import cuid from 'cuid'
 import test from 'tape'
 import sinon from 'sinon'
 import { SphereClient } from 'sphere-node-sdk'
-import ProductTypeImport from '../../src'
-import getSphereClientCredentials from '../../src/utils'
+import ProductTypeImport from 'index'
+import getSphereClientCredentials from 'utils'
 
 const PROJECT_KEY = 'sphere-node-product-type-import'
 
