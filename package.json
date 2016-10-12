@@ -69,7 +69,8 @@
     "semantic-release": "^4.3.5",
     "sinon": "^1.17.3",
     "tap-spec": "^4.1.1",
-    "tape": "^4.6.0"
+    "tape": "^4.6.0",
+    "validate-commit-msg": "^2.8.2"
   },
   "dependencies": {
     "ajv": "^4.0.0",
@@ -85,10 +86,11 @@
   },
   "config": {
     "commitizen": {
-      "path": "node_modules/cz-conventional-changelog"
+      "path": "cz-conventional-changelog"
     },
     "ghooks": {
-      "pre-commit": "npm run coverage && npm run check-coverage"
+      "commit-msg": "validate-commit-msg",
+      "pre-commit": "./scripts/lint-staged-files"
     }
   }
 }
