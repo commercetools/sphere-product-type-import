@@ -3,7 +3,7 @@ import test from 'tape'
 import sinon from 'sinon'
 import { SphereClient } from 'sphere-node-sdk'
 import ProductTypeImport from 'index'
-import getSphereClientCredentials from 'utils'
+import getSphereClientCredentials from 'sphere-client-credentials'
 
 const PROJECT_KEY = 'sphere-node-product-type-import'
 
