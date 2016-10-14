@@ -1,3 +1,4 @@
+[![commercetools logo][commercetools-icon]][commercetools]
 # sphere-product-type-import
 
 [![Travis][travis-badge]][travis-url]
@@ -10,15 +11,26 @@
 A library that helps with importing [product-types](http://dev.commercetools.com/http-api-projects-productTypes.html) into the [Commercetools Platform](http://www.commercetools.com/).  
 This library is built to be used in conjunction with [sphere-node-cli](https://github.com/sphereio/sphere-node-cli).
 
+Table of Contents
+=================
+  * [Features](#features)
+  * [Configuration](#configuration)
+  * [Usage](#usage)
+    * [Usage with sphere-node-cli](#usage-with-sphere-node-cli)
+    * [Direct usage](#direct-usage)
+  * [Contributing](#contributing)
+
 ## Features
 - Import product types to your CTP project
 - Pre-validate product types using a [JSON schema](https://github.com/sphereio/sphere-product-type-import/blob/master/src/product-type-import.js#L7)
 
-### Configuration
+## Configuration
 The configuration object may contain:
 - `sphereClientConfig`: see the [sphere-node-sdk docs](http://sphereio.github.io/sphere-node-sdk/) for more information on this
 
-## Usage with `sphere-node-cli`
+## Usage
+
+### Usage with `sphere-node-cli`
 
 You can use the product type import from the command line using the [`sphere-node-cli`](https://github.com/sphereio/sphere-node-cli).
 In order for the cli to import product types, the file to import from must be JSON and follow the this structure:
@@ -37,7 +49,7 @@ sphere-node-cli -t productType -p my-project-key -f /sample_dir/productTypes.jso
 ```
 You can pass a custom configuration as described above via the `-c` operator followed by a JSON String that represents your configuration
 
-## Direct usage
+### Direct usage
 
 If you want more control, you can also use this library directly in JavaScript. To do this you first need to install it:
 ```
@@ -75,6 +87,10 @@ productTypeImport.importProductType(productType)
   // }
 })
 ```
+## Contributing
+  See [CONTRIBUTING.md](CONTRIBUTING.md) file for info on how to contribute to this library
+[commercetools]: https://commercetools.com/
+[commercetools-icon]: https://cdn.rawgit.com/commercetools/press-kit/master/PNG/72DPI/CT%20logo%20horizontal%20RGB%2072dpi.png
 
 [travis-badge]: https://img.shields.io/travis/sphereio/sphere-product-type-import.svg?style=flat-square
 [travis-url]: https://travis-ci.org/sphereio/sphere-product-type-import

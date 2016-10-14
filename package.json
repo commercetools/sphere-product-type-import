@@ -1,22 +1,26 @@
 {
   "name": "sphere-product-type-import",
   "version": "0.0.0-semantically-released",
-  "description": "",
+  "description": "Library that helps with importing product type into the commercetools platform",
   "main": "dist/index.js",
   "scripts": {
-    "check-coverage": "istanbul check-coverage --statements 100 --branches 100 --functions 100 --lines 100",
+    "check-coverage": "nyc check-coverage --lines 100 --functions 100 --branches 100 --statements 100",
     "report-coverage": "cat ./coverage/lcov.info | codecov",
     "commit": "git-cz",
-    "test": "mocha tests/**/*.js --compilers js:babel-core/register",
-    "test:ci": "babel-node node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha -- tests/**/*.js",
-    "test:watch": "watch 'npm test' src/ tests/",
-    "build": "babel src --out-dir dist",
-    "lint": "eslint src tests",
+    "test": "cross-env NODE_ENV=test NODE_PATH=./src babel-node node_modules/.bin/tape tests/**/*.spec.js | tap-spec",
+    "clean": "rimraf dist/* coverage",
+    "test:watch": "chokidar src test -c 'npm test'",
+    "build": "npm run clean && babel src --out-dir dist",
+    "lint": "./scripts/lint src tests",
+    "coverage": "npm run lint && npm run clean && cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text npm test",
     "semantic-release": "semantic-release pre && npm run build && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/sphereio/sphere-product-type-import.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sphereio/sphere-product-type-import/issues"
   },
   "keywords": [
     "ctp",
@@ -24,52 +28,78 @@
     "product-type",
     "import"
   ],
+  "files": [
+    "dist/"
+  ],
+  "nyc": {
+    "include": [
+      "src/"
+    ],
+    "sourceMap": false,
+    "instrument": false
+  },
   "author": "Philipp Sporrer <philipp.sporrer@commercetools.de>",
+  "homepage": "https://github.com/sphereio/sphere-product-type-import#readme",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "6.6.0",
-    "babel-core": "6.6.5",
-    "babel-eslint": "5.0.0",
-    "babel-istanbul": "0.6.1",
-    "babel-preset-es2015": "6.6.0",
-    "babel-preset-stage-0": "6.5.0",
-    "babel-plugin-transform-runtime": "6.12.0",
-    "babel-runtime": "6.9.2",
-    "chai": "3.5.0",
-    "codecov.io": "0.1.6",
-    "commitizen": "2.6.1",
-    "cuid": "1.3.8",
-    "cz-conventional-changelog": "1.1.5",
-    "eslint": "2.2.0",
-    "ghooks": "1.0.3",
-    "isparta": "4.0.0",
-    "istanbul": "0.4.2",
-    "mocha": "2.4.5",
+    "babel-cli": "^6.6.0",
+    "babel-core": "^6.6.5",
+    "babel-eslint": "^7.0.0",
+    "babel-plugin-istanbul": "^2.0.1",
+    "babel-plugin-transform-runtime": "^6.12.0",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-register": "^6.14.0",
+    "babel-runtime": "^6.9.2",
+    "chokidar-cli": "^1.2.0",
+    "codecov": "^1.0.1",
+    "commitizen": "^2.6.1",
+    "cross-env": "^2.0.1",
+    "cuid": "^1.3.8",
+    "cz-conventional-changelog": "^1.1.5",
+    "eslint": "^3.6.1",
+    "eslint-config-airbnb": "^12.0.0",
+    "eslint-config-commercetools": "^4.0.0",
+    "eslint-formatter-pretty": "^1.0.0",
+    "eslint-plugin-import": "^1.16.0",
+    "eslint-plugin-jsx-a11y": "^2.2.2",
+    "eslint-plugin-react": "^6.3.0",
+    "ghooks": "^1.0.3",
+    "nyc": "^8.3.1",
+    "rimraf": "^2.5.4",
     "semantic-release": "^4.3.5",
-    "sinon": "1.17.3",
-    "sphere-node-utils": "0.8.0",
-    "watch": "0.17.1"
-  },
-  "babel": {
-    "presets": [
-      "es2015",
-      "stage-0"
-    ]
+    "sinon": "^1.17.3",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.6.0",
+    "validate-commit-msg": "^2.8.2"
   },
   "dependencies": {
-    "ajv": "4.0.0",
-    "ghooks": "1.0.3",
-    "lodash": "4.6.1",
-    "sphere-node-sdk": "1.10.1",
-    "underscore": "1.8.3",
-    "underscore-mixins": "0.1.4"
+    "ajv": "^4.0.0",
+    "bluebird": "^2.11.0",
+    "lodash": "^4.6.1",
+    "sphere-node-sdk": "^1.10.1",
+    "sphere-node-utils": "^0.8.0",
+    "underscore": "^1.8.3",
+    "underscore-mixins": "^0.1.4"
+  },
+  "eslintConfig": {
+    "extends": "commercetools",
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "paths": [
+            "src/"
+          ]
+        }
+      }
+    }
   },
   "config": {
     "commitizen": {
-      "path": "node_modules/cz-conventional-changelog"
+      "path": "cz-conventional-changelog"
     },
     "ghooks": {
-      "pre-commit": "npm run test:ci && npm run check-coverage"
+      "commit-msg": "validate-commit-msg",
+      "pre-commit": "./scripts/lint-staged-files"
     }
   }
 }

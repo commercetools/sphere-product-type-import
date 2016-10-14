@@ -3,3 +3,4 @@ dist
 coverage
 .sphere-project-credentials.json
 *.log
+.nyc_output
