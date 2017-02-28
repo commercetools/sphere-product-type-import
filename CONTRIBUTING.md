@@ -1,56 +1,36 @@
 # Contributing
-First of all, thank you for contributing. It’s appreciated. This guide details how to use issues and pull requests to improve this project.
 
-Table of Contents
-=================
+Please take a moment to review this document in order to make the contribution
+process easy and effective for everyone involved.
 
-  * [Requirements](#requirements)
-  * [Installation](#installation)
-  * [Running](#running)
-  * [Making changes](#making-changes)
-    * [Branching](#branching)
-    * [Commit message](#commit-message)
-  * [Creating an Issue](#creating-an-issue)
-  * [Tests](#tests)
+Following these guidelines helps to communicate that you respect the time of
+the developers managing and developing this open source project. In return,
+they should reciprocate that respect in addressing your issue or assessing
+patches and features.
 
-## Requirements:
-* NodeJS(v4 LTS)
-* git crypt
+We now have a central repository for the sdk and our tools. Gradually, we will be migrating all our tools to the repository. Keep an eye on it [here](https://github.com/commercetools/nodejs)
 
-## Installation
-Clone this repository
+## Setting Up a Local Copy
+1. Clone the repo with `git clone git@github.com:sphereio/sphere-product-type-import.git`
+2. Run `npm install`
+3. We are using git-crypt for encrypting configs. You should have this installed.
+      Run
+          ```bash
+             $ git-crypt unlock
+          ```
+      to unlock the config file.
+4. To run all packages tests simply do `npm test` (we use [tape](https://github.com/substack/tape)).
+5. To run tests in watch mode, use `npm run test:watch`
+6. Linting and static checks are done by `npm lint`.
+7. You can check the code coverage by running `npm run coverage`
 
-```bash
-$ git clone https://github.com/sphereio/sphere-product-type-import.git
-```
-
-We are using git-crypt for encrypting configs.
-Run
-
-```bash
-$ git-crypt unlock
-```
-
-to unlock the config file.
-
-## Running
-Watch for file changes then lint and test:
-`npm start`
-
-Babelify everything in `src` output to `dist`:
-`npm run build`
-
-## Making changes
-* Create a topic branch from where you want to base your work.
-* Make commits of logical units.
-* Make sure you have added the necessary tests for your changes.
-
-### Branching
-When creating a branch. Use the issue number(without the '#') as the prefix and add a short title, like: `1-commit-message-example`
+## Styleguide
+Regarding code style like indentation and whitespace, **follow the conventions you see used in the source already**.
+You can lint your code by running `npm lint`
 
 ### Commit message
 Make sure your commit messages follow the [Angular's format](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#-git-commit-guidelines), try `npm run commit`:
-````
+```
     docs(contributing): make the example in contributing guidelines concrete
 
     The example commit message in the contributing.md document is not a concrete example. This is a problem because the
@@ -60,12 +40,19 @@ Make sure your commit messages follow the [Angular's format](https://github.com/
 
     Closes #1
     Breaks having an open issue
-````
+```
 
-## Creating an Issue
-Before you create a new issue:
-  * Check the issues on Github to ensure that one doesn't already exist.
-  * Clearly describe the issue, there is an [ISSUE_TEMPLATE](.github/ISSUE_TEMPLATE.md) to guide you.
+## Making changes
+* Create a topic branch from where you want to base your work.
+* Make commits of logical units.
+* Make sure you have added the necessary tests for your changes.
+
+### Branching
+When creating a branch. Use the issue number(without the '#') as the prefix and add a short title, like: `1-commit-message-example`
+
+## Labels
+We have two categories of labels, one for _status_ and another for _type_ of issue.
+Please add the relevant labels as needed. When working on an issue, please add the _status: in progress_ label and when you want it to be reviewed. Add the _status: in review_ and it will be reviewed.
 
 ## Tests
 We use [tape](https://github.com/substack/tape) for unit and integration test. You can use [Cucumber](https://github.com/cucumber/cucumber-js) for acceptance tests.
@@ -81,4 +68,16 @@ To run coverage, project key is also needed
 npm run coverage --projectkey=[<your personal development project key>]
 ```
 
-We try to maintain a code coverage of 100%. Please ensure you do so too 😉
+## Submitting a Pull Request
+Good pull requests, such as patches, improvements, and new features, are a fantastic help. They should remain focused in scope and avoid containing unrelated commits.
+
+Please **ask first** if somebody else is already working on this or the core developers think your feature is in-scope for the related package / project. Generally always have a related issue with discussions for whatever you are including.
+
+Please also provide a **test plan**, i.e. specify how you verified that your addition works.
+
+Please adhere to the coding conventions used throughout a project (indentation,
+accurate comments, etc.) and any other requirements (such as test coverage).
+
+## Assignees and reviewees
+After submitting a PR, assign yourself the PR and add part of the NodeJS team in the reviewers section.
+
