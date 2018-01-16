@@ -23,7 +23,7 @@ const validate = ajv.compile({
       },
     },
   },
-  required: ['name', 'description'],
+  required: ['name', 'key', 'description'],
   additionalProperties: false,
 })
 

@@ -49,6 +49,38 @@ const before = function setupSphereCreds () {
 }
 
 test(`productType import module
+  should not import product type without key`, (t) => {
+  t.timeoutAfter(10000)
+  const productType = {
+    name: 'custom-product-type',
+    description: 'Some cool description',
+    attributes: [],
+  }
+  before()
+    .then(() =>
+      productTypeImport.importProductType(productType)
+    )
+    .then(() => {
+      const summary = JSON.parse(productTypeImport.summaryReport())
+      const actual = summary.errors.length
+
+      t.equal(actual, 1, 'There should be an error')
+      t.equal(
+        summary.errors[0].error[0].message,
+        'should have required property \'key\''
+      )
+      return client.productTypes.where(`name="${productType.name}"`).fetch()
+    })
+    .then(({ body: { results: productTypes } }) => {
+      const _actual = productTypes.length
+
+      t.equal(_actual, 0, 'ProductTypes should not be imported')
+      t.end()
+    })
+    .catch(t.end)
+})
+
+test(`productType import module
   should import a complete product type`, (t) => {
   t.timeoutAfter(10000)
   before().then(() => {
@@ -171,6 +203,7 @@ test(`productType import module
     })
     .then(({ body: { results: productTypes } }) => {
       const [importedProductType] = productTypes
+      t.equal(!!importedProductType, true, 'ProductType should be imported')
       const actual = importedProductType.attributes.map(a => a.name)
       const expected = ['width', 'color']
       t.deepEqual(actual, expected, 'Product attributes should be equal')

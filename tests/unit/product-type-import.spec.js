@@ -98,7 +98,7 @@ test(`processStream function
 })
 
 test(`processStream function
-  should call it\'s callback`, (t) => {
+  should call it's callback`, (t) => {
   const callback = sinon.spy()
   const importer = new ProductTypeImport(logger, options)
 
@@ -132,7 +132,11 @@ test(`processStream function should
 test(`validation method
   should resolve if the product-type object is valid`, (t) => {
   const importer = new ProductTypeImport(logger, options)
-  importer.validateProductType({ name: 'product-type', description: 'des' })
+  importer.validateProductType({
+    name: 'product-type',
+    key: 'key',
+    description: 'des',
+  })
   .then(() => {
     t.end()
   })
@@ -190,7 +194,7 @@ test(`importProductType method
   should increase the successfullImports counter`, (t) => {
   const importer = initProductTypeImport()
   importer.importProductType(
-    { name: 'product-type', description: 'some product type' }
+    { name: 'product-type', key: 'key', description: 'some product type' }
   ).then(() => {
     const actual = importer.summary.successfullImports
     const expected = 1
@@ -227,7 +231,7 @@ test(`importProductType method
   const mockCustomerSave = () => Promise.reject(error)
   sinon.stub(importer.client.productTypes, 'save', mockCustomerSave)
   const productType = {
-    name: 'product-type', description: 'some product type',
+    name: 'product-type', key: 'key', description: 'some product type',
   }
   importer.importProductType(productType)
   .then(() => {
@@ -248,7 +252,7 @@ test(`importProductType method
   const mockCustomerSave = () => Promise.reject({})
   sinon.stub(importer.client.productTypes, 'save', mockCustomerSave)
   const productType = {
-    name: 'product-type', description: 'some product type',
+    name: 'product-type', key: 'key', description: 'some product type',
   }
   importer.importProductType(productType)
   .then(() => {
