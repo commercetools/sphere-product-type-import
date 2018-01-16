@@ -1,4 +1,5 @@
-[![commercetools logo][commercetools-icon]][commercetools]
+![commercetools logo](https://cdn.rawgit.com/commercetools/press-kit/master/PNG/72DPI/CT%20logo%20horizontal%20RGB%2072dpi.png)
+
 # sphere-product-type-import
 
 [![Travis][travis-badge]][travis-url]
@@ -89,8 +90,6 @@ productTypeImport.importProductType(productType)
 ```
 ## Contributing
   See [CONTRIBUTING.md](CONTRIBUTING.md) file for info on how to contribute to this library
-[commercetools]: https://commercetools.com/
-[commercetools-icon]: https://cdn.rawgit.com/commercetools/press-kit/master/PNG/72DPI/CT%20logo%20horizontal%20RGB%2072dpi.png
 
 [travis-badge]: https://img.shields.io/travis/sphereio/sphere-product-type-import.svg?style=flat-square
 [travis-url]: https://travis-ci.org/sphereio/sphere-product-type-import
