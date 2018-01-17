@@ -58,8 +58,6 @@ export default class ProductTypeImport {
       // call next for next batch
       next()
     })
-    // errors get catched in the node-cli which also calls for the next chunk
-    // if an error occurred in this chunk
   }
 
   importProductType (productType) {
