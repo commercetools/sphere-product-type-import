@@ -9,6 +9,9 @@ const PROJECT_KEY = 'sphere-node-product-type-import'
 
 
 const options = {
+  importerConfig: {
+    rejectOnError: false,
+  },
   sphereClientConfig: {
     config: {
       project_key: PROJECT_KEY,
@@ -112,7 +115,7 @@ test(`processStream function
 
 test(`processStream function should
   call importProductType for each product-type in the given chunk`, (t) => {
-  const mockImportProductType = sinon.spy(() => {})
+  const mockImportProductType = sinon.spy(() => Promise.resolve())
   const callback = () => {}
   const productTypes = Array.from(new Array(10), () => ({ name: cuid() }))
   const importer = new ProductTypeImport(logger, options)

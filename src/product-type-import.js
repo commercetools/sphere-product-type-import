@@ -30,11 +30,14 @@ const validate = ajv.compile({
 export default class ProductTypeImport {
 
   constructor (logger, { sphereClientConfig, importerConfig }) {
+    const defaultConfig = {
+      rejectOnError: true,
+    }
+
     this.logger = logger
     this.client = new SphereClient(sphereClientConfig)
     this.productTypes = {}
-
-    this.config = _.assign({}, importerConfig)
+    this.config = _.assign(defaultConfig, importerConfig || {})
 
     this.summary = {
       errors: [],
@@ -56,15 +59,18 @@ export default class ProductTypeImport {
       next()
     })
     // errors get catched in the node-cli which also calls for the next chunk
-    // if an error occured in this chunk
+    // if an error occurred in this chunk
   }
 
   importProductType (productType) {
     return this.validateProductType(productType)
-    .then(() => this._importValidatedProductType(productType))
-    .catch((error) => {
-      this.summary.errors.push({ productType, error })
-    })
+      .then(() => this._importValidatedProductType(productType))
+      .catch((error) => {
+        this.summary.errors.push({ productType, error })
+        return this.config.rejectOnError
+          ? Promise.reject(error)
+          : Promise.resolve()
+      })
   }
 
   _importValidatedProductType (productType) {
@@ -75,7 +81,6 @@ export default class ProductTypeImport {
         const { version, id } = existingType
 
         const actions = this.buildUpdateActions(productType, existingType)
-
         return this.client.productTypes.byId(id).update({
           version,
           actions,
@@ -118,6 +123,14 @@ export default class ProductTypeImport {
     if (isValid)
       return Promise.resolve()
 
-    return Promise.reject(validate.errors)
+    const productTypeName = productType.key || productType.name || 'unknown'
+    const error = new Error(
+      `Validation error on productType "${productTypeName}"`
+      + ` - ${validate.errors[0].message}`
+    )
+    error.body = {
+      errors: validate.errors,
+    }
+    return Promise.reject(error)
   }
 }

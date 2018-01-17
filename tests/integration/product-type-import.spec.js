@@ -53,7 +53,7 @@ test(`productType import module
   t.timeoutAfter(10000)
   const productType = {
     name: 'custom-product-type',
-    description: 'Some cool description',
+    description: 1244,
     attributes: [],
   }
   before()
@@ -61,23 +61,25 @@ test(`productType import module
       productTypeImport.importProductType(productType)
     )
     .then(() => {
-      const summary = JSON.parse(productTypeImport.summaryReport())
-      const actual = summary.errors.length
-
-      t.equal(actual, 1, 'There should be an error')
+      t.end('Error - should throw validation error')
+    })
+    .catch((err) => {
       t.equal(
-        summary.errors[0].error[0].message,
-        'should have required property \'key\''
+        err.message.includes(
+          'Validation error on productType "custom-product-type"'
+        ),
+        true,
+        'Importer should throw validation error'
       )
-      return client.productTypes.where(`name="${productType.name}"`).fetch()
-    })
-    .then(({ body: { results: productTypes } }) => {
-      const _actual = productTypes.length
 
-      t.equal(_actual, 0, 'ProductTypes should not be imported')
-      t.end()
+      return client.productTypes.where(`name="${productType.name}"`).fetch()
+        .then(({ body: { results: productTypes } }) => {
+          const _actual = productTypes.length
+
+          t.equal(_actual, 0, 'ProductTypes should not be imported')
+          t.end()
+        })
     })
-    .catch(t.end)
 })
 
 test(`productType import module
