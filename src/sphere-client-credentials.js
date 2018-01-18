@@ -5,12 +5,12 @@ const getSphereClientCredentials = (projectKey) => {
   if (!projectKey)
     return Promise.reject(new Error('Project Key is needed'))
   return ProjectCredentialsConfig.create()
-  .then((credentials) => {
-    const sphereCredentials = credentials.enrichCredentials({
-      project_key: projectKey,
+    .then((credentials) => {
+      const sphereCredentials = credentials.enrichCredentials({
+        project_key: projectKey,
+      })
+      return sphereCredentials
     })
-    return sphereCredentials
-  })
 }
 
 export default getSphereClientCredentials
