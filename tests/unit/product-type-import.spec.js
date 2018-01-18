@@ -10,7 +10,7 @@ const PROJECT_KEY = 'sphere-node-product-type-import'
 
 const options = {
   importerConfig: {
-    rejectOnError: false,
+    continueOnProblems: true,
   },
   sphereClientConfig: {
     config: {

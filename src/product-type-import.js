@@ -31,7 +31,7 @@ export default class ProductTypeImport {
 
   constructor (logger, { sphereClientConfig, importerConfig }) {
     const defaultConfig = {
-      rejectOnError: true,
+      continueOnProblems: false,
     }
 
     this.logger = logger
@@ -65,9 +65,9 @@ export default class ProductTypeImport {
       .then(() => this._importValidatedProductType(productType))
       .catch((error) => {
         this.summary.errors.push({ productType, error })
-        return this.config.rejectOnError
-          ? Promise.reject(error)
-          : Promise.resolve()
+        return this.config.continueOnProblems
+          ? Promise.resolve()
+          : Promise.reject(error)
       })
   }
 

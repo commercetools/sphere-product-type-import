@@ -66,7 +66,7 @@ const productType = {
 }
 const config = {
   importerConfig: {
-    rejectOnError: true
+    continueOnProblems: false
   },
   sphereClientConfig: {
     config: {
@@ -92,7 +92,7 @@ productTypeImport.importProductType(productType)
 })
 ```
 
-When there is an error during processing productTypes, process will by default save this error to `summary.errors` array and reject. If the configuration flag `importerConfig.rejectOnError` is set to `false` the importer will only push error to summary and then continue with next productType.
+When there is an error during processing productTypes, process will by default save this error to `summary.errors` array and reject. If the configuration flag `importerConfig.continueOnProblems` is set to `true` the importer will only push error to summary and then continue with next productType.
  
 ## Contributing
   See [CONTRIBUTING.md](CONTRIBUTING.md) file for info on how to contribute to this library
