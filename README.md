@@ -65,6 +65,9 @@ const productType = {
   description: '<some-description>'
 }
 const config = {
+  importerConfig: {
+    continueOnProblems: false
+  },
   sphereClientConfig: {
     config: {
       project_key: <PROJECT_KEY>,
@@ -88,6 +91,9 @@ productTypeImport.importProductType(productType)
   // }
 })
 ```
+
+When there is an error during processing productTypes, process will by default save this error to `summary.errors` array and reject. If the configuration flag `importerConfig.continueOnProblems` is set to `true` the importer will only push error to summary and then continue with next productType.
+ 
 ## Contributing
   See [CONTRIBUTING.md](CONTRIBUTING.md) file for info on how to contribute to this library
 

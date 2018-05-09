@@ -28,13 +28,15 @@ const validate = ajv.compile({
 })
 
 export default class ProductTypeImport {
-
   constructor (logger, { sphereClientConfig, importerConfig }) {
+    const defaultConfig = {
+      continueOnProblems: false,
+    }
+
     this.logger = logger
     this.client = new SphereClient(sphereClientConfig)
     this.productTypes = {}
-
-    this.config = _.assign({}, importerConfig)
+    this.config = _.assign(defaultConfig, importerConfig || {})
 
     this.summary = {
       errors: [],
@@ -50,51 +52,54 @@ export default class ProductTypeImport {
   processStream (productTypes, next) {
     // process batch
     return Promise.map(
-      productTypes, productType => this.importProductType(productType)
-    ).then(() => {
-      // call next for next batch
-      next()
-    })
-    // errors get catched in the node-cli which also calls for the next chunk
-    // if an error occured in this chunk
+      productTypes,
+      productType => this.importProductType(productType),
+      { concurrency: 5 },
+    )
+      .then(() => {
+        // call next for next batch
+        next()
+      })
   }
 
   importProductType (productType) {
     return this.validateProductType(productType)
-    .then(() => this._importValidatedProductType(productType))
-    .catch((error) => {
-      this.summary.errors.push({ productType, error })
-    })
+      .then(() => this._importValidatedProductType(productType))
+      .catch((error) => {
+        this.summary.errors.push({ productType, error })
+        return this.config.continueOnProblems
+          ? Promise.resolve()
+          : Promise.reject(error)
+      })
   }
 
   _importValidatedProductType (productType) {
     return this.client.productTypes.where(`key="${productType.key}"`).fetch()
-    .then(({ body: { total, results: productTypes } }) => {
-      if (total > 0) {
-        const [existingType] = productTypes
-        const { version, id } = existingType
+      .then(({ body: { total, results: productTypes } }) => {
+        if (total > 0) {
+          const [existingType] = productTypes
+          const { version, id } = existingType
 
-        const actions = this.buildUpdateActions(productType, existingType)
+          const actions = this.buildUpdateActions(productType, existingType)
+          return this.client.productTypes.byId(id).update({
+            version,
+            actions,
+          })
+        }
 
-        return this.client.productTypes.byId(id).update({
-          version,
-          actions,
-        })
-      }
-
-      return this.client.productTypes.save(productType)
-    })
-    .then(() => {
-      this.summary.inserted.push(productType.name)
-      this.summary.successfullImports = this.summary.successfullImports + 1
-      return productType
-    })
-    .catch((error) => {
+        return this.client.productTypes.save(productType)
+      })
+      .then(() => {
+        this.summary.inserted.push(productType.name)
+        this.summary.successfullImports = this.summary.successfullImports + 1
+        return productType
+      })
+      .catch((error) => {
       // TO DO: potentially handle duplicate field error here
       // if (error.body && error.body.message && !~error.
       //    body.message.indexOf('already exists'))
-      throw error
-    })
+        throw error
+      })
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -102,15 +107,13 @@ export default class ProductTypeImport {
     // Add attributes to existing product types.
     // Existing attributes are filtered out.
     return productType.attributes
-    .filter(attr =>
-      !existingProductType.attributes.find(existingAttribute =>
-        existingAttribute.name === attr.name
-      )
-    )
-    .map(attr => ({
-      action: 'addAttributeDefinition',
-      attribute: attr,
-    }))
+      .filter(attr =>
+        !existingProductType.attributes.find(existingAttribute =>
+          existingAttribute.name === attr.name))
+      .map(attr => ({
+        action: 'addAttributeDefinition',
+        attribute: attr,
+      }))
   }
   // eslint-disable-next-line class-methods-use-this
   validateProductType (productType) {
@@ -118,6 +121,12 @@ export default class ProductTypeImport {
     if (isValid)
       return Promise.resolve()
 
-    return Promise.reject(validate.errors)
+    const prodTypeName = productType.key || productType.name || 'unknown'
+    const error = new Error(`Validation error on productType "${prodTypeName}"`
+      + ` - ${validate.errors[0].message}`)
+    error.body = {
+      errors: validate.errors,
+    }
+    return Promise.reject(error)
   }
 }

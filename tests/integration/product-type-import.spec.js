@@ -19,15 +19,13 @@ const logger = {
   error: console.error,
 }
 /* eslint-enable no-console */
-const deleteAll = (service, client) => client[service].process(
-  ({ body: { results } }) => Promise.map(
-    results, productType => client[service].byId(
-      productType.id
-    ).delete(
-      productType.version
-    )
-  )
-)
+const deleteAll = (service, client) =>
+  client[service]
+    .process(({ body: { results } }) =>
+      Promise.map(results, productType =>
+        client[service]
+          .byId(productType.id)
+          .delete(productType.version)))
 
 let client
 let productTypeImport
@@ -42,7 +40,7 @@ const before = function setupSphereCreds () {
 
       productTypeImport = new ProductTypeImport(
         logger,
-        { sphereClientConfig: options }
+        { sphereClientConfig: options },
       )
       return deleteAll('productTypes', client)
     })
@@ -53,31 +51,31 @@ test(`productType import module
   t.timeoutAfter(10000)
   const productType = {
     name: 'custom-product-type',
-    description: 'Some cool description',
+    description: 1244,
     attributes: [],
   }
   before()
     .then(() =>
-      productTypeImport.importProductType(productType)
-    )
+      productTypeImport.importProductType(productType))
     .then(() => {
-      const summary = JSON.parse(productTypeImport.summaryReport())
-      const actual = summary.errors.length
-
-      t.equal(actual, 1, 'There should be an error')
+      t.end('Error - should throw validation error')
+    })
+    .catch((err) => {
       t.equal(
-        summary.errors[0].error[0].message,
-        'should have required property \'key\''
+        err.message.includes('Validation error on productType'
+            + ' "custom-product-type"'),
+        true,
+        'Importer should throw validation error',
       )
-      return client.productTypes.where(`name="${productType.name}"`).fetch()
-    })
-    .then(({ body: { results: productTypes } }) => {
-      const _actual = productTypes.length
 
-      t.equal(_actual, 0, 'ProductTypes should not be imported')
-      t.end()
+      return client.productTypes.where(`name="${productType.name}"`).fetch()
+        .then(({ body: { results: productTypes } }) => {
+          const _actual = productTypes.length
+
+          t.equal(_actual, 0, 'ProductTypes should not be imported')
+          t.end()
+        })
     })
-    .catch(t.end)
 })
 
 test(`productType import module
@@ -117,25 +115,25 @@ test(`productType import module
       ],
     }
     productTypeImport.importProductType(productType)
-    .then(() => {
-      const summary = JSON.parse(productTypeImport.summaryReport())
-      const actual = summary.errors.length
-      const expected = 0
+      .then(() => {
+        const summary = JSON.parse(productTypeImport.summaryReport())
+        const actual = summary.errors.length
+        const expected = 0
 
-      t.equal(actual, expected, 'There should be no error')
-      return client.productTypes.where(`name="${productType.name}"`).fetch()
-      .then(({ body: { results: productTypes } }) => {
-        const _actual = productTypes.length
-        const _expected = 1
+        t.equal(actual, expected, 'There should be no error')
+        return client.productTypes.where(`name="${productType.name}"`).fetch()
+          .then(({ body: { results: productTypes } }) => {
+            const _actual = productTypes.length
+            const _expected = 1
 
-        t.equal(_actual, _expected, 'ProductTypes count should be same')
+            t.equal(_actual, _expected, 'ProductTypes count should be same')
 
-        t.end()
+            t.end()
+          })
       })
-    })
-    .catch(t.end)
+      .catch(t.end)
   })
-  .catch(t.end)
+    .catch(t.end)
 })
 
 test(`productType import module
@@ -177,38 +175,38 @@ test(`productType import module
       }],
     })
     productTypeImport.importProductType(productType)
-    .then(() => {
-      const summary = JSON.parse(productTypeImport.summaryReport())
-      const actual = summary.errors.length
-      const expected = 0
+      .then(() => {
+        const summary = JSON.parse(productTypeImport.summaryReport())
+        const actual = summary.errors.length
+        const expected = 0
 
-      t.equal(actual, expected, 'There should be no error')
+        t.equal(actual, expected, 'There should be no error')
 
-      return client.productTypes.where(`name="${productType.name}"`).fetch()
-    })
-    .then(({ body: { results: productTypes } }) => {
-      const actual = productTypes.length
-      const expected = 1
+        return client.productTypes.where(`name="${productType.name}"`).fetch()
+      })
+      .then(({ body: { results: productTypes } }) => {
+        const actual = productTypes.length
+        const expected = 1
 
-      t.equal(actual, expected, 'ProductTypes count should be equal')
-    })
-    .then(() => productTypeImport.importProductType(updatedProductType))
-    .then(() => {
-      const summary = JSON.parse(productTypeImport.summaryReport())
-      const actual = summary.errors.length
-      const expected = 0
-      t.equal(actual, expected, 'There should be no error')
+        t.equal(actual, expected, 'ProductTypes count should be equal')
+      })
+      .then(() => productTypeImport.importProductType(updatedProductType))
+      .then(() => {
+        const summary = JSON.parse(productTypeImport.summaryReport())
+        const actual = summary.errors.length
+        const expected = 0
+        t.equal(actual, expected, 'There should be no error')
 
-      return client.productTypes.where(`name="${productType.name}"`).fetch()
-    })
-    .then(({ body: { results: productTypes } }) => {
-      const [importedProductType] = productTypes
-      t.equal(!!importedProductType, true, 'ProductType should be imported')
-      const actual = importedProductType.attributes.map(a => a.name)
-      const expected = ['width', 'color']
-      t.deepEqual(actual, expected, 'Product attributes should be equal')
-      t.end()
-    })
+        return client.productTypes.where(`name="${productType.name}"`).fetch()
+      })
+      .then(({ body: { results: productTypes } }) => {
+        const [importedProductType] = productTypes
+        t.equal(!!importedProductType, true, 'ProductType should be imported')
+        const actual = importedProductType.attributes.map(a => a.name)
+        const expected = ['width', 'color']
+        t.deepEqual(actual, expected, 'Product attributes should be equal')
+        t.end()
+      })
   })
-  .catch(t.end)
+    .catch(t.end)
 })

@@ -9,6 +9,9 @@ const PROJECT_KEY = 'sphere-node-product-type-import'
 
 
 const options = {
+  importerConfig: {
+    continueOnProblems: true,
+  },
   sphereClientConfig: {
     config: {
       project_key: PROJECT_KEY,
@@ -103,30 +106,30 @@ test(`processStream function
   const importer = new ProductTypeImport(logger, options)
 
   importer.processStream([], callback)
-  .then(() => {
-    t.ok(callback.calledOnce, 'ProductTypeImport is called once')
+    .then(() => {
+      t.ok(callback.calledOnce, 'ProductTypeImport is called once')
 
-    t.end()
-  })
+      t.end()
+    })
 })
 
 test(`processStream function should
   call importProductType for each product-type in the given chunk`, (t) => {
-  const mockImportProductType = sinon.spy(() => {})
+  const mockImportProductType = sinon.spy(() => Promise.resolve())
   const callback = () => {}
   const productTypes = Array.from(new Array(10), () => ({ name: cuid() }))
   const importer = new ProductTypeImport(logger, options)
-  sinon.stub(importer, 'importProductType', mockImportProductType)
+  sinon.stub(importer, 'importProductType').callsFake(mockImportProductType)
 
   importer.processStream(productTypes, callback)
-  .then(() => {
-    const actual = mockImportProductType.callCount
-    const expected = productTypes.length
+    .then(() => {
+      const actual = mockImportProductType.callCount
+      const expected = productTypes.length
 
-    t.equal(actual, expected, 'Product types count is equal')
+      t.equal(actual, expected, 'Product types count is equal')
 
-    t.end()
-  })
+      t.end()
+    })
 })
 
 test(`validation method
@@ -137,18 +140,18 @@ test(`validation method
     key: 'key',
     description: 'des',
   })
-  .then(() => {
-    t.end()
-  })
+    .then(() => {
+      t.end()
+    })
 })
 
 test(`validation method
   should reject if the product-type object is invalid`, (t) => {
   const importer = new ProductTypeImport(logger, options)
   importer.validateProductType({})
-  .catch(() => {
-    t.end()
-  })
+    .catch(() => {
+      t.end()
+    })
 })
 
 test(`buildUpdateActions method
@@ -169,7 +172,9 @@ test(`buildUpdateActions method
   }
 
   const actual = importer.buildUpdateActions(
-    newProductType, existingProductType)
+    newProductType,
+    existingProductType,
+  )
   const expected = [
     {
       action: 'addAttributeDefinition',
@@ -193,15 +198,19 @@ const initProductTypeImport = function initProductTypeImport () {
 test(`importProductType method
   should increase the successfullImports counter`, (t) => {
   const importer = initProductTypeImport()
-  importer.importProductType(
-    { name: 'product-type', key: 'key', description: 'some product type' }
-  ).then(() => {
-    const actual = importer.summary.successfullImports
-    const expected = 1
-    t.equal(actual, expected, 'One product should be imported successfully')
+  importer.importProductType({
+    name: 'product-type',
+    key: 'key',
+    description: 'some product type',
+  })
+    .then(() => {
+      const actual = importer.summary.successfullImports
+      const expected = 1
+      t.equal(actual, expected, 'One product should be imported successfully')
 
-    t.end()
-  }).catch(t.end)
+      t.end()
+    })
+    .catch(t.end)
 })
 
 test(`importProductType method
@@ -209,13 +218,13 @@ test(`importProductType method
   corresponding product-type to the errors array`, (t) => {
   const importer = initProductTypeImport()
   importer.importProductType({})
-  .then(() => {
-    const actual = importer.summary.errors.length
-    const expected = 1
-    t.equal(actual, expected, 'Error should occur')
+    .then(() => {
+      const actual = importer.summary.errors.length
+      const expected = 1
+      t.equal(actual, expected, 'Error should occur')
 
-    t.end()
-  }).catch(t.end)
+      t.end()
+    }).catch(t.end)
 })
 
 test(`importProductType method
@@ -229,40 +238,44 @@ test(`importProductType method
     },
   }
   const mockCustomerSave = () => Promise.reject(error)
-  sinon.stub(importer.client.productTypes, 'save', mockCustomerSave)
+  sinon.stub(importer.client.productTypes, 'save').callsFake(mockCustomerSave)
   const productType = {
     name: 'product-type', key: 'key', description: 'some product type',
   }
   importer.importProductType(productType)
-  .then(() => {
-    const actual = importer.summary.errors[0]
-    const expected = {
-      productType,
-      error,
-    }
-    t.deepEqual(actual, expected, 'existing product types should be handled')
-    importer.client.productTypes.save.restore()
-    t.end()
-  }).catch(t.end)
+    .then(() => {
+      const actual = importer.summary.errors[0]
+      const expected = {
+        productType,
+        error,
+      }
+      t.deepEqual(
+        actual,
+        expected,
+        'existing product types should be handled',
+      )
+      importer.client.productTypes.save.restore()
+      t.end()
+    }).catch(t.end)
 })
 
 test(`importProductType method
   should handle errors during creating a product-type`, (t) => {
   const importer = initProductTypeImport()
   const mockCustomerSave = () => Promise.reject({})
-  sinon.stub(importer.client.productTypes, 'save', mockCustomerSave)
+  sinon.stub(importer.client.productTypes, 'save').callsFake(mockCustomerSave)
   const productType = {
     name: 'product-type', key: 'key', description: 'some product type',
   }
   importer.importProductType(productType)
-  .then(() => {
-    const actual = importer.summary.errors[0]
-    const expected = {
-      productType,
-      error: {},
-    }
-    t.deepEqual(actual, expected, 'there is no error')
-    importer.client.productTypes.save.restore()
-    t.end()
-  }).catch(t.end)
+    .then(() => {
+      const actual = importer.summary.errors[0]
+      const expected = {
+        productType,
+        error: {},
+      }
+      t.deepEqual(actual, expected, 'there is no error')
+      importer.client.productTypes.save.restore()
+      t.end()
+    }).catch(t.end)
 })
