@@ -1,6 +1,6 @@
 {
   "name": "sphere-product-type-import",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Library that helps with importing product type into the commercetools platform",
   "main": "dist/index.js",
   "scripts": {
