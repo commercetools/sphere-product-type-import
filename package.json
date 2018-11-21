@@ -80,7 +80,7 @@
     "bluebird": "^3.5.1",
     "estraverse": "^4.2.0",
     "lodash": "^4.6.1",
-    "sphere-node-sdk": "^3.0.0",
+    "sphere-node-sdk": "^2.1.2",
     "sphere-node-utils": "^1.0.0",
     "underscore": "^1.8.3",
     "underscore-mixins": "^0.1.4"
